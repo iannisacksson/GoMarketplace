@@ -70,8 +70,12 @@ const CartProvider: React.FC = ({ children }) => {
     async id => {
       const productIndex = products.findIndex(product => product.id === id);
 
-      if (products[productIndex].quantity > 0) {
+      if (products[productIndex].quantity > 1) {
         products[productIndex].quantity -= 1;
+
+        setProducts([...products]);
+      } else {
+        products.splice(productIndex, 1);
 
         setProducts([...products]);
       }
