@@ -48,8 +48,13 @@ const CartProvider: React.FC = ({ children }) => {
         productState => productState.id === product.id,
       );
 
+      const newProduct = {
+        ...product,
+        quantity: 1,
+      };
+
       if (!checkProductExist) {
-        setProducts([...products, product]);
+        setProducts([...products, newProduct]);
       }
     },
     [products],
