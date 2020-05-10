@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import api from '../services/api';
 
 interface Product {
   id: string;
@@ -31,10 +30,10 @@ const CartProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     async function loadProducts(): Promise<void> {
-      const productsStorage = await AsyncStorage.getItem('@GoMarketplace');
+      const storedProduct = await AsyncStorage.getItem('@GoMarketplace');
 
-      if (productsStorage) {
-        setProducts(JSON.parse(productsStorage));
+      if (storedProduct) {
+        setProducts(JSON.parse(storedProduct));
       }
     }
 
