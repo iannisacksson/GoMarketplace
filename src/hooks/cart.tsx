@@ -33,11 +33,32 @@ const CartProvider: React.FC = ({ children }) => {
     async function loadProducts(): Promise<void> {
       const productsStorage = await AsyncStorage.getItem('@GoMarketplace');
 
-      setProducts(JSON.parse(productsStorage));
+      if (productsStorage) {
+        setProducts(JSON.parse(productsStorage));
+      }
     }
 
     loadProducts();
   }, []);
+
+  useEffect(() => {
+    async function saveCart(): Promise<void> {
+      await AsyncStorage.setItem('@GoMarketplace', JSON.stringify(products));
+    }
+
+    saveCart();
+  }, [products]);
+
+  const increment = useCallback(
+    async id => {
+      const productIndex = products.findIndex(product => product.id === id);
+
+      products[productIndex].quantity += 1;
+
+      setProducts([...products]);
+    },
+    [products],
+  );
 
   const addToCart = useCallback(
     async product => {
@@ -53,26 +74,12 @@ const CartProvider: React.FC = ({ children }) => {
       if (!checkProductExist) {
         setProducts([...products, newProduct]);
 
-        await AsyncStorage.setItem(
-          '@GoMarketplace',
-          JSON.stringify([...products, newProduct]),
-        );
+        return null;
       }
+
+      increment(product.id);
     },
-    [products],
-  );
-
-  const increment = useCallback(
-    async id => {
-      const productIndex = products.findIndex(product => product.id === id);
-
-      products[productIndex].quantity += 1;
-
-      setProducts([...products]);
-
-      await AsyncStorage.setItem('@GoMarketplace', JSON.stringify(products));
-    },
-    [products],
+    [products, increment],
   );
 
   const decrement = useCallback(
@@ -83,12 +90,8 @@ const CartProvider: React.FC = ({ children }) => {
         products[productIndex].quantity -= 1;
 
         setProducts([...products]);
-
-        await AsyncStorage.setItem('@GoMarketplace', JSON.stringify(products));
       } else {
         products.splice(productIndex, 1);
-
-        await AsyncStorage.setItem('@GoMarketplace', JSON.stringify(products));
 
         setProducts([...products]);
       }

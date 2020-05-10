@@ -39,8 +39,8 @@ const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
   useEffect(() => {
-    // TODO
-  }, []);
+    products;
+  }, [products]);
 
   function handleIncrement(id: string): void {
     increment(id);
