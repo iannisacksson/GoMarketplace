@@ -70,13 +70,9 @@ const CartProvider: React.FC = ({ children }) => {
         quantity: 1,
       };
 
-      if (!checkProductExist) {
-        setProducts([...products, newProduct]);
-
-        return null;
-      }
-
-      increment(product.id);
+      !checkProductExist
+        ? setProducts([...products, newProduct])
+        : increment(product.id);
     },
     [products, increment],
   );
